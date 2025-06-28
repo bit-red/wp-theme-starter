@@ -20,35 +20,12 @@ docker-compose up -d
 
 **Pronto!** O WordPress estará rodando em http://localhost:8080
 
-## 📋 O que é configurado automaticamente
-
-✅ **WordPress** com Docker  
-✅ **MariaDB** como banco de dados  
-✅ **Volumes montados** para desenvolvimento local  
-✅ **Arquivo .env** criado e configurado  
-✅ **Estrutura de pastas** para temas e plugins  
-✅ **Auto-detecção** de primeira execução
-
 ## 🎯 Acesso rápido
 
 - **Site:** http://localhost:8080
 - **Admin:** http://localhost:8080/wp-admin
     - **Usuário:** `admin`
     - **Senha:** `admin123`
-
-## 🛠️ Comandos disponíveis
-
-```bash
-# Gerenciar containers
-composer run dev        # Iniciar WordPress
-composer run stop       # Parar containers  
-composer run restart    # Reiniciar containers
-composer run logs       # Ver logs em tempo real
-composer run clean      # Limpar tudo e recomeçar
-
-# Desenvolvimento
-composer run shell      # Entrar no container WordPress
-```
 
 ## 📁 Estrutura do projeto
 
@@ -61,6 +38,36 @@ meu-projeto/
 ├── .env                 # ⚙️ Variáveis de ambiente
 └── composer.json        # 📦 Configuração Composer
 ```
+
+## 🔧 Desenvolvimento de Temas, Plugins e Upload de Arquivos
+
+Se você deseja criar temas/plugins personalizados ou ter acesso aos arquivos de upload, após subir o ambiente Docker, você precisa:
+
+### 1. Copiar os arquivos do container para o host:
+
+```bash
+docker cp wordpress_app:/bitnami/wordpress/wp-content/themes/. ./themes/
+docker cp wordpress_app:/bitnami/wordpress/wp-content/plugins/. ./plugins/
+docker cp wordpress_app:/bitnami/wordpress/wp-content/uploads/. ./uploads/
+```
+
+### 2. Descomentar as linhas de volume no `docker-compose.yml`:
+
+```yaml
+volumes:
+  - 'wordpress_data:/bitnami/wordpress'
+  - './themes:/bitnami/wordpress/wp-content/themes'
+  - './plugins:/bitnami/wordpress/wp-content/plugins'
+  - './uploads:/bitnami/wordpress/wp-content/uploads'
+```
+
+### 3. Reiniciar o container:
+
+```bash
+docker-compose down
+docker-compose up -d
+```
+
 
 ## ⚙️ Personalização
 

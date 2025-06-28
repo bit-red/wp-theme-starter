@@ -15,46 +15,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  # Inicialização automática - roda apenas se pastas estiverem vazias
-  wordpress-init:
-    image: docker.io/bitnami/wordpress:6
-    container_name: wordpress_init
-    volumes:
-      - './themes:/host/themes'
-      - './plugins:/host/plugins'
-      - './uploads:/host/uploads'
-    command: >
-      bash -c "
-        echo '🔍 Verificando se é primeira execução...'
-      
-        # Verificar se alguma pasta tem conteúdo
-        THEMES_COUNT=$$(find /host/themes -mindepth 1 -maxdepth 1 2>/dev/null | wc -l)
-        PLUGINS_COUNT=$$(find /host/plugins -mindepth 1 -maxdepth 1 2>/dev/null | wc -l)
-      
-        if [ \"$$THEMES_COUNT\" -eq 0 ] && [ \"$$PLUGINS_COUNT\" -eq 0 ]; then
-          echo '📋 Primeira execução detectada! Copiando arquivos do WordPress...'
-      
-          echo '  📁 Copiando themes...'
-          cp -r /opt/bitnami/wordpress/wp-content/themes/* /host/themes/ 2>/dev/null || true
-      
-          echo '  🔌 Copiando plugins...'
-          cp -r /opt/bitnami/wordpress/wp-content/plugins/* /host/plugins/ 2>/dev/null || true
-      
-          echo '  📂 Preparando uploads...'
-          touch /host/uploads/.gitkeep
-      
-          echo '✅ Arquivos copiados! WordPress será iniciado com volumes montados.'
-        else
-          echo '✅ Arquivos já existem. Pulando inicialização.'
-        fi
-      
-        echo '🚀 Inicialização concluída!'
-      "
-    depends_on:
-      mariadb:
-        condition: service_healthy
-
   wordpress:
     image: docker.io/bitnami/wordpress:6
     container_name: wordpress_app
@@ -66,9 +26,6 @@ services:
       - './themes:/bitnami/wordpress/wp-content/themes'
       - './plugins:/bitnami/wordpress/wp-content/plugins'
       - './uploads:/bitnami/wordpress/wp-content/uploads'
-    depends_on:
-      wordpress-init:
-        condition: service_completed_successfully
     environment:
       - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
       - WORDPRESS_DATABASE_HOST=${WORDPRESS_DATABASE_HOST}
