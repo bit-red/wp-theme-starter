@@ -1,0 +1,89 @@
+{
+  "name": "bit-red/wp-theme-starter",
+  "description": "WordPress Theme Development Starter with Docker - Ready to use template",
+  "type": "project",
+  "keywords": ["wordpress", "theme", "docker", "development", "starter", "template"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Victor Damacena",
+      "email": "victordamacenaalbino@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.2"
+  },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "*"
+  },
+  "scripts": {
+    "post-create-project-cmd": [
+      "@setup-project"
+    ],
+    "setup-project": [
+      "echo '🚀 Configurando WordPress Development Environment...'",
+      "@setup-env",
+      "@start-containers",
+      "@show-info"
+    ],
+    "setup-env": [
+      "cp .env.example .env",
+      "echo '✅ Arquivo .env criado'"
+    ],
+    "start-containers": [
+      "docker-compose up -d",
+      "echo '✅ WordPress iniciado'"
+    ],
+    "show-info": [
+      "echo ''",
+      "echo '🎉 WordPress Theme Starter configurado com sucesso!'",
+      "echo ''",
+      "echo '🌐 Site: http://localhost:8080'",
+      "echo '🔧 Admin: http://localhost:8080/wp-admin'",
+      "echo '   Usuário: admin'",
+      "echo '   Senha: admin123'",
+      "echo ''",
+      "echo '📁 Desenvolva seus temas em: ./themes/'",
+      "echo '💡 Comandos úteis:'",
+      "echo '   composer run dev    - Iniciar containers'",
+      "echo '   composer run stop   - Parar containers'",
+      "echo '   composer run logs   - Ver logs'",
+      "echo ''"
+    ],
+    "dev": [
+      "docker-compose up -d",
+      "echo '🚀 WordPress iniciado em http://localhost:8080'"
+    ],
+    "stop": [
+      "docker-compose down",
+      "echo '⏹️ Containers parados'"
+    ],
+    "restart": [
+      "docker-compose restart",
+      "echo '🔄 Containers reiniciados'"
+    ],
+    "logs": "docker-compose logs -f",
+    "clean": [
+      "docker-compose down -v",
+      "echo '🧹 Ambiente limpo'"
+    ],
+    "shell": "docker-compose exec wordpress bash"
+  },
+  "config": {
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "extra": {
+    "wordpress-starter": {
+      "version": "1.0.0",
+      "features": [
+        "Docker WordPress 6",
+        "MariaDB",
+        "Volume mounting for development",
+        "Auto-setup on first run"
+      ]
+    }
+  }
+}

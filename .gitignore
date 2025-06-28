@@ -1,36 +1,196 @@
-# Node
-node_modules/
+# =============================================================================
+# WordPress Theme Starter - .gitignore
+# =============================================================================
+
+# Arquivos de ambiente (contém credenciais)
+.env
+.env.local
+.env.production
+
+# =============================================================================
+# Conteúdo WordPress (copiado automaticamente na primeira execução)
+# =============================================================================
+
+# Temas padrão do WordPress (serão copiados pelo template)
+themes/twenty*
+
+# Plugins padrão do WordPress
+plugins/akismet/
+plugins/hello.php
+plugins/index.php
+
+# Uploads (apenas manter estrutura)
+uploads/*
+!uploads/.gitkeep
+
+# WordPress core files se estiver usando volume mount diferente
+wp-admin/
+wp-includes/
+wp-content/index.php
+wp-*.php
+xmlrpc.php
+readme.html
+license.txt
+
+# =============================================================================
+# Docker & Containers
+# =============================================================================
+
+# Override do docker-compose
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# Volumes do Docker
+.docker/
+
+# =============================================================================
+# Logs & Temporários
+# =============================================================================
+
+# Logs
 *.log
-yarn.lock
-package-lock.json
+logs/
+*.log.*
 
-# Composer
-vendor/
-composer.lock
+# Cache
+.cache/
+cache/
 
-# Docker volumes (caso use bind de volumes temporários)
-mariadb_data/
-wordpress_data/
+# Temporários
+*.tmp
+*.temp
+*.bak
+*.backup
+.DS_Store_
 
-# WordPress uploads (não versionar arquivos enviados pelo painel)
-uploads/
+# =============================================================================
+# Sistema Operacional
+# =============================================================================
 
-# Build e cache do Sage (ajuste se precisar)
-themes/**/dist/
-themes/**/public/
-themes/**/.cache/
-themes/**/node_modules/
-themes/**/vendor/
-themes/**/composer.lock
-themes/**/package-lock.json
-themes/**/yarn.lock
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
 
-# IDEs / editores
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.nfs*
+
+# =============================================================================
+# Editores & IDEs
+# =============================================================================
+
+# Visual Studio Code
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# PhpStorm / IntelliJ
 .idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
 *.swp
 *.swo
+*~
+.netrwhist
 
-# SO
-.DS_Store
-Thumbs.db
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+
+# Atom
+.atom/
+
+# =============================================================================
+# Ferramentas de Build & Dependências
+# =============================================================================
+
+# Node.js (se usar ferramentas de build)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+package-lock.json
+yarn.lock
+
+# Composer (vendor será ignorado em projetos criados, não no template)
+# vendor/ (NÃO ignorar no template pois não terá vendor/)
+
+# Webpack & Build tools
+dist/
+build/
+.webpack/
+
+# SASS/SCSS
+.sass-cache/
+*.css.map
+
+# =============================================================================
+# WordPress específico
+# =============================================================================
+
+# WordPress debug
+debug.log
+wp-config-local.php
+wp-config-production.php
+
+# WordPress uploads específicos
+*.sql
+*.sql.gz
+*.sql.zip
+
+# Backup plugins
+*-backup-*/
+backup-*
+
+# =============================================================================
+# Segurança
+# =============================================================================
+
+# Chaves e certificados
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+
+# Arquivos de configuração sensíveis
+auth.json
+.htpasswd
+
+# =============================================================================
+# Arquivos específicos do projeto (adicione conforme necessário)
+# =============================================================================
+
+# Se usar Custom Post Types UI exports
+# cptui-exports/
+
+# Se usar ACF Pro exports
+# acf-json/
+
+# Relatórios de testes
+/tests/reports/
+phpunit.xml
+.phpunit.result.cache

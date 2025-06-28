@@ -1,43 +1,90 @@
 services:
   mariadb:
-    image: bitnami/mariadb:latest
-    container_name: mariadb
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-      - MARIADB_USER=bn_wordpress
-      - MARIADB_DATABASE=bitnami_wordpress
-      - MARIADB_PASSWORD=bitnami
+    image: docker.io/bitnami/mariadb:latest
+    container_name: wordpress_mariadb
     volumes:
-      - mariadb_data:/bitnami/mariadb
-    networks:
-      - wordpress_network
+      - 'mariadb_data:/bitnami/mariadb'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
+      - MARIADB_USER=${MARIADB_USER}
+      - MARIADB_DATABASE=${MARIADB_DATABASE}
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Inicialização automática - roda apenas se pastas estiverem vazias
+  wordpress-init:
+    image: docker.io/bitnami/wordpress:6
+    container_name: wordpress_init
+    volumes:
+      - './themes:/host/themes'
+      - './plugins:/host/plugins'
+      - './uploads:/host/uploads'
+    command: >
+      bash -c "
+        echo '🔍 Verificando se é primeira execução...'
+      
+        # Verificar se alguma pasta tem conteúdo
+        THEMES_COUNT=$$(find /host/themes -mindepth 1 -maxdepth 1 2>/dev/null | wc -l)
+        PLUGINS_COUNT=$$(find /host/plugins -mindepth 1 -maxdepth 1 2>/dev/null | wc -l)
+      
+        if [ \"$$THEMES_COUNT\" -eq 0 ] && [ \"$$PLUGINS_COUNT\" -eq 0 ]; then
+          echo '📋 Primeira execução detectada! Copiando arquivos do WordPress...'
+      
+          echo '  📁 Copiando themes...'
+          cp -r /opt/bitnami/wordpress/wp-content/themes/* /host/themes/ 2>/dev/null || true
+      
+          echo '  🔌 Copiando plugins...'
+          cp -r /opt/bitnami/wordpress/wp-content/plugins/* /host/plugins/ 2>/dev/null || true
+      
+          echo '  📂 Preparando uploads...'
+          touch /host/uploads/.gitkeep
+      
+          echo '✅ Arquivos copiados! WordPress será iniciado com volumes montados.'
+        else
+          echo '✅ Arquivos já existem. Pulando inicialização.'
+        fi
+      
+        echo '🚀 Inicialização concluída!'
+      "
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   wordpress:
-    image: bitnami/wordpress:latest
-    container_name: wordpress
+    image: docker.io/bitnami/wordpress:6
+    container_name: wordpress_app
     ports:
-      - '8080:8080'
-      - '8443:8443'
-    environment:
-      - WORDPRESS_DATABASE_HOST=mariadb
-      - WORDPRESS_DATABASE_PORT_NUMBER=3306
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - WORDPRESS_DATABASE_PASSWORD=bitnami
+      - '${HOST_HTTP_PORT}:8080'
+      - '${HOST_HTTPS_PORT}:8443'
     volumes:
-      - wordpress_data:/bitnami/wordpress
-      - ./themes:/bitnami/wordpress/wp-content/themes
-      - ./plugins:/bitnami/wordpress/wp-content/plugins
-      - ./uploads:/bitnami/wordpress/wp-content/uploads
+      - 'wordpress_data:/bitnami/wordpress'
+      - './themes:/bitnami/wordpress/wp-content/themes'
+      - './plugins:/bitnami/wordpress/wp-content/plugins'
+      - './uploads:/bitnami/wordpress/wp-content/uploads'
     depends_on:
-      - mariadb
-    networks:
-      - wordpress_network
+      wordpress-init:
+        condition: service_completed_successfully
+    environment:
+      - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
+      - WORDPRESS_DATABASE_HOST=${WORDPRESS_DATABASE_HOST}
+      - WORDPRESS_DATABASE_PORT_NUMBER=${WORDPRESS_DATABASE_PORT_NUMBER}
+      - WORDPRESS_DATABASE_USER=${WORDPRESS_DATABASE_USER}
+      - WORDPRESS_DATABASE_NAME=${WORDPRESS_DATABASE_NAME}
+      - WORDPRESS_DATABASE_PASSWORD=${WORDPRESS_DATABASE_PASSWORD}
+      - WORDPRESS_BLOG_NAME=${WORDPRESS_BLOG_NAME}
+      - WORDPRESS_USERNAME=${WORDPRESS_USERNAME}
+      - WORDPRESS_PASSWORD=${WORDPRESS_PASSWORD}
+      - WORDPRESS_EMAIL=${WORDPRESS_EMAIL}
+      - WORDPRESS_SKIP_BOOTSTRAP=${WORDPRESS_SKIP_BOOTSTRAP}
+    restart: unless-stopped
 
 volumes:
   mariadb_data:
+    driver: local
   wordpress_data:
-
-networks:
-  wordpress_network:
-    driver: bridge
+    driver: local

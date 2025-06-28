@@ -1,0 +1,84 @@
+# =============================================================================
+# WordPress Theme Starter - .gitattributes
+# =============================================================================
+
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# =============================================================================
+# Line Endings
+# =============================================================================
+
+# Force LF for shell scripts (importante para Docker)
+*.sh text eol=lf
+
+# Force LF for Docker files
+Dockerfile* text eol=lf
+docker-compose*.yml text eol=lf
+docker-compose*.yaml text eol=lf
+
+# =============================================================================
+# PHP Files
+# =============================================================================
+*.php text
+*.phtml text
+
+# =============================================================================
+# Web Files
+# =============================================================================
+*.css text
+*.scss text
+*.sass text
+*.js text
+*.ts text
+*.html text
+*.htm text
+*.xml text
+*.json text
+*.yml text
+*.yaml text
+
+# =============================================================================
+# Documentation
+# =============================================================================
+*.md text
+*.txt text
+README* text
+LICENSE* text
+CHANGELOG* text
+
+# =============================================================================
+# Configuration Files
+# =============================================================================
+.env.example text
+.gitignore text
+.gitattributes text
+composer.json text
+composer.lock text
+package.json text
+*.conf text
+*.ini text
+
+# =============================================================================
+# Binary Files (não fazer conversão de line ending)
+# =============================================================================
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.tgz binary
+
+# =============================================================================
+# Exclude from release archives
+# =============================================================================
+.gitattributes export-ignore
+.gitignore export-ignore
+.github/ export-ignore
+tests/ export-ignore
+docs/ export-ignore
+*.md export-ignore
