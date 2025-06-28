@@ -1,0 +1,36 @@
+# Node
+node_modules/
+*.log
+yarn.lock
+package-lock.json
+
+# Composer
+vendor/
+composer.lock
+
+# Docker volumes (caso use bind de volumes temporários)
+mariadb_data/
+wordpress_data/
+
+# WordPress uploads (não versionar arquivos enviados pelo painel)
+uploads/
+
+# Build e cache do Sage (ajuste se precisar)
+themes/**/dist/
+themes/**/public/
+themes/**/.cache/
+themes/**/node_modules/
+themes/**/vendor/
+themes/**/composer.lock
+themes/**/package-lock.json
+themes/**/yarn.lock
+
+# IDEs / editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# SO
+.DS_Store
+Thumbs.db
