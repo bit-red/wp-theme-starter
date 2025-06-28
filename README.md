@@ -7,6 +7,15 @@
 ```bash
 composer create-project bit-red/wp-theme-starter meu-projeto
 cd meu-projeto
+
+# Copiar arquivo de configuração
+cp .env.example .env
+
+# Ou no Windows:
+copy .env.example .env
+
+# Iniciar WordPress
+docker-compose up -d
 ```
 
 **Pronto!** O WordPress estará rodando em http://localhost:8080
