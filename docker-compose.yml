@@ -1,0 +1,43 @@
+services:
+  mariadb:
+    image: bitnami/mariadb:latest
+    container_name: mariadb
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=bn_wordpress
+      - MARIADB_DATABASE=bitnami_wordpress
+      - MARIADB_PASSWORD=bitnami
+    volumes:
+      - mariadb_data:/bitnami/mariadb
+    networks:
+      - wordpress_network
+
+  wordpress:
+    image: bitnami/wordpress:latest
+    container_name: wordpress
+    ports:
+      - '8080:8080'
+      - '8443:8443'
+    environment:
+      - WORDPRESS_DATABASE_HOST=mariadb
+      - WORDPRESS_DATABASE_PORT_NUMBER=3306
+      - WORDPRESS_DATABASE_USER=bn_wordpress
+      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
+      - WORDPRESS_DATABASE_PASSWORD=bitnami
+    volumes:
+      - wordpress_data:/bitnami/wordpress
+      - ./themes:/bitnami/wordpress/wp-content/themes
+      - ./plugins:/bitnami/wordpress/wp-content/plugins
+      - ./uploads:/bitnami/wordpress/wp-content/uploads
+    depends_on:
+      - mariadb
+    networks:
+      - wordpress_network
+
+volumes:
+  mariadb_data:
+  wordpress_data:
+
+networks:
+  wordpress_network:
+    driver: bridge
