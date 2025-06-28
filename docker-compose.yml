@@ -23,9 +23,9 @@ services:
       - '${HOST_HTTPS_PORT}:8443'
     volumes:
       - 'wordpress_data:/bitnami/wordpress'
-      - './themes:/bitnami/wordpress/wp-content/themes'
-      - './plugins:/bitnami/wordpress/wp-content/plugins'
-      - './uploads:/bitnami/wordpress/wp-content/uploads'
+#      - './themes:/bitnami/wordpress/wp-content/themes'
+#      - './plugins:/bitnami/wordpress/wp-content/plugins'
+#      - './uploads:/bitnami/wordpress/wp-content/uploads'
     environment:
       - ALLOW_EMPTY_PASSWORD=${ALLOW_EMPTY_PASSWORD}
       - WORDPRESS_DATABASE_HOST=${WORDPRESS_DATABASE_HOST}
